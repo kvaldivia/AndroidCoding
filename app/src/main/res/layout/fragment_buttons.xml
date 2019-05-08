@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context=".ButtonsFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <Button
+            android:id="@+id/showToastlButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/show_toast_label"
+            android:layout_marginTop="48dp"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            app:layout_constraintHorizontal_bias="0.533"/>
+
+    <Button
+            android:id="@+id/showLabelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/show_alert_label"
+            android:layout_marginTop="80dp"
+            app:layout_constraintTop_toBottomOf="@+id/showToastlButton"
+            app:layout_constraintStart_toStartOf="@+id/showToastlButton"
+            app:layout_constraintEnd_toEndOf="@+id/showToastlButton"/>
+
+</android.support.constraint.ConstraintLayout>
