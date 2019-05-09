@@ -37,19 +37,7 @@ class GithubProjectFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_githubproject_list, container, false)
-
-        // Set the adapter
-        if (view is RecyclerView) {
-            with(view) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
-                }
-                adapter = MyGithubProjectRecyclerViewAdapter(DummyContent.ITEMS, listener)
-            }
-        }
-        return view
+        return inflater.inflate(R.layout.fragment_githubproject_list, container, false)
     }
 
     override fun onAttach(context: Context) {

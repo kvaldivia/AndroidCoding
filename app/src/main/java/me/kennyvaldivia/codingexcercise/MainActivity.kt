@@ -1,7 +1,6 @@
 package me.kennyvaldivia.codingexcercise
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
@@ -12,7 +11,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import android.content.Intent
 import android.net.Uri
-import android.support.v4.app.FragmentManager
+import android.support.v4.app.Fragment
 import android.util.Log
 import me.kennyvaldivia.codingexcercise.dummy.DummyContent
 import me.kennyvaldivia.codingexcercise.github.Api
@@ -31,48 +30,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    fun getTenKotlinProjects() {
-        var retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        var api = retrofit.create(Api::class.java)
-        var call = api.users
-        call.enqueue(object : Callback<List<Project>> {
-
-            override fun onResponse(call: Call<List<Project>>?, response: Response<List<Project>>?) {
-                var projects = response?.body()
-                var length = projects!!.size
-                var str = ""
-
-                for (i in 0 until length) {
-                    str = str + "\n" + projects.get(i).name + " " + projects.get(i).owner
-                }
-            }
-
-            override fun onFailure(call: Call<List<Project>>?, t: Throwable?) {
-                Log.v("Error", t.toString())
-            }
-        })
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        val fm = supportFragmentManager
-        val buttonsFragment = ButtonsFragment()
-        fm.beginTransaction()
-            .add(buttonsFragment, "buttons")
-            .commit()
-        val githubFragment = GithubProjectFragment()
-        fm.beginTransaction()
-            .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-            .add(githubFragment, "github")
-            .commit()
-
+        supportFragmentManager.fragments.forEach {
+            val fmt = supportFragmentManager.beginTransaction()
+            if (it.id == R.id.welcomeFragment)
+                fmt.show(it)
+            else
+                fmt.hide(it)
+            fmt.commit()
+        }
 
         val toggle = ActionBarDrawerToggle(
             this, drawer_layout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -92,6 +62,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
@@ -109,16 +80,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
+        val fm = supportFragmentManager
         when (item.itemId) {
             R.id.nav_google -> {
                 this.launchGoogleWebsite()
             }
             R.id.nav_buttons -> {
-                this.showButtonsFragment()
+                val buttonsFragment = fm.findFragmentById(R.id.buttonsFragment)!!
+                this.switchFragments(buttonsFragment)
             }
             R.id.nav_github -> {
-                this.showGithubFragment()
+                val githubFragment = fm.findFragmentById(R.id.githubFragment)!!
+                this.switchFragments(githubFragment)
             }
         }
 
@@ -131,19 +104,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         startActivity(browserIntent)
     }
 
-    fun showButtonsFragment() {
+    fun switchFragments(fragmentToShow: Fragment) {
         val fm = supportFragmentManager
-        val buttonsFragment = fm.findFragmentByTag("buttons")
-        fm.beginTransaction()
-            .show(buttonsFragment!!)
-            .commit()
-    }
-
-    fun showGithubFragment() {
-        val fm = supportFragmentManager
-        val githubFragment = GithubProjectFragment()
-        fm.beginTransaction()
-            .add(githubFragment, "github")
-            .commit()
+        fm.fragments.forEach {
+            val fmt = fm.beginTransaction()
+            if (it.id == fragmentToShow.id)
+                fmt.show(fragmentToShow)
+            else
+                fmt.hide(it)
+            fmt.commit()
+        }
     }
 }
