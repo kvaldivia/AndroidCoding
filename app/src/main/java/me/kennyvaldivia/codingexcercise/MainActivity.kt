@@ -12,23 +12,16 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import android.content.Intent
 import android.net.Uri
 import android.support.v4.app.Fragment
-import android.util.Log
 import me.kennyvaldivia.codingexcercise.dummy.DummyContent
-import me.kennyvaldivia.codingexcercise.github.Api
-import me.kennyvaldivia.codingexcercise.github.Project
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GithubProjectFragment.OnListFragmentInteractionListener {
-    val BASE_URL = "https://api.github.com/search/"
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+    GithubProjectFragment.OnListFragmentInteractionListener {
 
     override fun onListFragmentInteraction(item: DummyContent.DummyItem?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +47,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
@@ -61,7 +55,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             super.onBackPressed()
         }
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -90,7 +83,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 this.switchFragments(buttonsFragment)
             }
             R.id.nav_github -> {
-                val githubFragment = fm.findFragmentById(R.id.githubFragment)!!
+                val githubFragment = fm.findFragmentById(R.id.githubFragment)!! as GithubProjectFragment
+                githubFragment.getTenKotlinProjects(this)
                 this.switchFragments(githubFragment)
             }
         }
